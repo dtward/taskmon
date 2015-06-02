@@ -7,7 +7,13 @@
 #include <fstream>
 #include <ctime>
 
+
+
 class TaskInfo {
+public: 
+  // my enum type for properties, this will be used for sorting
+  enum property {CPU, MEM};
+
 private:
   // the members
   time_t _lastTime;
@@ -30,9 +36,12 @@ private:
   // but update will take rate of change
   void update0();
 
+  static property _sortBy;
 
 
 public:
+
+
   // constructors
   // default constructor
   TaskInfo(void);
@@ -40,20 +49,27 @@ public:
   TaskInfo(int pid);
 
   // get set
-  int getPid();
+  int getPid() const;
   void setPid(int pid);
-  bool getIsAlive();
-  std::string getName();
-  double getCpu();
-  double getMem();
-  double getIoIn();
-  double getIoOut();
+  bool getIsAlive() const;
+  std::string getName() const;
+  double getCpu() const;
+  double getMem() const;
+  double getIoIn() const;
+  double getIoOut() const;
+  static property getSortBy();
+  static void setSortBy(property p);
 
   // update info
   void update();
 
   // print info
-  void print();
+  void print() const;
+
+
+  // overload comparison
+  bool operator<(  TaskInfo const & t) const;
+  bool operator>(  TaskInfo const & t) const;
 };
 
 

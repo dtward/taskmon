@@ -5,6 +5,11 @@
 // probably get the initial values in the constructor
 // then update is a different function
 
+
+// default sort by
+// this is the weird notation to set static members
+TaskInfo::property TaskInfo::_sortBy = TaskInfo::CPU;
+
 // constructor
 TaskInfo::TaskInfo(){
   _isAlive = false; // do nothing
@@ -15,33 +20,43 @@ TaskInfo::TaskInfo(int pid){
 }
 
 // get set
-int TaskInfo::getPid(){
+int TaskInfo::getPid() const {
   return _pid;
 }
-void TaskInfo::setPid(int pid){
+void TaskInfo::setPid(int pid) {
   _pid = pid;
 }
-bool TaskInfo::getIsAlive(){
+bool TaskInfo::getIsAlive() const {
   return _isAlive;
 }
-std::string TaskInfo::getName(){
+std::string TaskInfo::getName() const {
   return _name;
 }
-double TaskInfo::getCpu(){
+double TaskInfo::getCpu() const {
   return _cpu;
 }
-double TaskInfo::getMem(){
+double TaskInfo::getMem() const {
   return _mem;
 }
-double TaskInfo::getIoIn(){
+double TaskInfo::getIoIn() const {
   return _ioIn;
 }
-double TaskInfo::getIoOut(){
+double TaskInfo::getIoOut() const {
   return _ioOut;
 }
+TaskInfo::property TaskInfo::getSortBy() {
+  return _sortBy;
+}
+void TaskInfo::setSortBy(TaskInfo::property p){
+  _sortBy = p;
+}
+
 
 // update info the first time
 void TaskInfo::update0(){
+  // set to true until we see otherwise
+  _isAlive = true;
+  // get the time
   time(&_thisTime);
   // first assemble the root string
   std::ostringstream s;
@@ -50,10 +65,9 @@ void TaskInfo::update0(){
   // now we'll read the name.  We can check if the file exists here
   std::ifstream fName((fileRoot + "comm").c_str());
   if (fName.good()){
-    _isAlive = true;
   } else {
     _isAlive = false;
-    std::cout << "could not read name" << std::endl;
+    std::cerr << "could not read name" << std::endl;
   }
   fName >> _name;
   fName.close();
@@ -63,7 +77,8 @@ void TaskInfo::update0(){
   if (fMem.good()){
     fMem >> _mem;
   } else {
-    std::cout << "could not read memory" << std::endl;
+    _isAlive = false;
+    std::cerr << "could not read memory" << std::endl;
   }
   fMem.close();
 
@@ -77,7 +92,8 @@ void TaskInfo::update0(){
     fIo >> tmp;
     fIo >> _ioOut0;
   } else {
-    std::cout << "could not read io" << std::endl;
+    _isAlive = false;
+    std::cerr << "could not read io" << std::endl;
   }
   fIo.close();
   _ioIn = 0;
@@ -119,7 +135,8 @@ void TaskInfo::update0(){
     fCpu >> _cpu0;
     //std::cout << "read raw cpu as " << _cpu0 << std::endl;
   } else {
-    std::cout << "could not read cpu" << std::endl;
+    std::cerr << "could not read cpu" << std::endl;
+    _isAlive = false;
   }
   fCpu.close();
   _cpu = 0;
@@ -127,9 +144,11 @@ void TaskInfo::update0(){
 
 // now the real update
 void TaskInfo::update(){
+  // set to true until we find otherwise
+  _isAlive = true;
+  // get time
   _lastTime = _thisTime;
   time(&_thisTime);
-
   double deltaT = difftime(_thisTime, _lastTime);
   //std::cout << "deltaT is " << deltaT << std::endl;
 
@@ -143,7 +162,7 @@ void TaskInfo::update(){
     _isAlive = true;
   } else {
     _isAlive = false;
-    std::cout << "could not read name" << std::endl;
+    std::cerr << "could not read name" << std::endl;
   }
   fName >> _name;
   fName.close();
@@ -153,7 +172,8 @@ void TaskInfo::update(){
   if (fMem.good()){
     fMem >> _mem;
   } else {
-    std::cout << "could not read memory" << std::endl;
+    _isAlive = false;
+    std::cerr << "could not read memory" << std::endl;
   }
   fMem.close();
 
@@ -177,7 +197,8 @@ void TaskInfo::update(){
     _ioOut = (_ioOut - _ioOut0)/deltaT;
     _ioOut0 = tmp;
   } else {
-    std::cout << "could not read io" << std::endl;
+    _isAlive = false;
+    std::cerr << "could not read io" << std::endl;
   }
   fIo.close();
 
@@ -221,7 +242,8 @@ void TaskInfo::update(){
     _cpu = (_cpu - _cpu0)/deltaT;
     _cpu0 = tmp;
   } else {
-    std::cout << "could not read cpu" << std::endl;
+    _isAlive = false;
+    std::cerr << "could not read cpu" << std::endl;
   }
   fCpu.close();
 
@@ -229,7 +251,7 @@ void TaskInfo::update(){
 
 
 // print info
-void TaskInfo::print(){
+void TaskInfo::print() const {
   using namespace std;
   cout << "pid: "     << _pid     << endl;
   cout << "isAlive: " << _isAlive << endl;
@@ -238,4 +260,24 @@ void TaskInfo::print(){
   cout << "mem: "     << _mem     << endl;
   cout << "ioIn: "    << _ioIn    << endl;
   cout << "ioOut: "   << _ioOut   << endl;
+}
+
+
+
+// comparisson for sorting
+bool TaskInfo::operator<(TaskInfo const & t) const {
+  switch (_sortBy){
+  case CPU:
+    //std::cout << "comparing by cpu" << std::endl;
+    return _cpu < t._cpu;
+    break;
+  case MEM:
+    //std::cout << "comparing by mem" << std::endl;
+    return _mem < t._mem;
+    break;
+  }
+}
+
+bool TaskInfo::operator>( TaskInfo const & t) const {
+  return !operator<(t);
 }

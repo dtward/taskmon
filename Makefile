@@ -11,3 +11,8 @@ taskmon.o: taskmon.cpp taskInfo.hpp
 
 taskInfo.o: taskInfo.cpp taskInfo.hpp
 	g++ -c -o taskInfo.o taskInfo.cpp
+
+
+clean:
+	rm -f taskmon
+	rm -f *.o
