@@ -1,23 +1,49 @@
 #include <iostream>
 
-#include "taskInfo.hpp"
+
 
 #include "unistd.h" // for sleep
 #include <vector>
+#include <string>
 #include "dirent.h" // basic directory reader
 #include <sstream>
-#include <algorithm> // for sort
+#include <algorithm> // for sort, find
 
-int 
-main(int argc, char** argv){
+
+#include "taskInfo.hpp"
+#include "taskInfoGL.hpp"
+
+int main(int argc, char** argv){
 
   std::cout << "Hello world" << std::endl;
 
+  // set what to sort by
+  // default by cpu
+  TaskInfo::setSortBy(TaskInfo::CPU);
+  // check input arguments
+  std::vector<std::string>inputArgs(argv,argv+argc);
+  for (std::vector<std::string>::iterator it = inputArgs.begin(); it != inputArgs.end(); ++it){
+    std::cout << " " << *it;
+  }
+  std::cout << std::endl;
 
-  TaskInfo::setSortBy(TaskInfo::MEM);
 
+  // add more checks here if I want to sort by other things
+  std::vector<std::string>::iterator memInd = std::find(inputArgs.begin(),inputArgs.end(),"mem");
+  std::vector<std::string>::iterator cpuInd = std::find(inputArgs.begin(),inputArgs.end(),"cpu");
+  if (memInd != inputArgs.end()){
+    TaskInfo::setSortBy(TaskInfo::MEM);
+    std::cout << "sorting by memory use" << std::endl;
+  } else if (cpuInd != inputArgs.end()) {
+    TaskInfo::setSortBy(TaskInfo::CPU);
+    std::cout << "sorting by cpu use" << std::endl;
+  }
+
+
+
+  // begin the work
   int nLoop = 10; // may switch this for a while loop
-  std::vector<TaskInfo> tasks; // maybe better to use a list
+  std::vector<TaskInfoGL> tasks; // maybe better to use a list
 
   for (int i = 0; i < nLoop; i++){ // start loop over repeated printing
     // loop over a directory
@@ -31,14 +57,14 @@ main(int argc, char** argv){
 
       // check if we already have this task in our list
       bool alreadyHaveThisTask = false;
-      for (std::vector<TaskInfo>::iterator pt = tasks.begin(); pt != tasks.end(); ++pt){
+      for (std::vector<TaskInfoGL>::iterator pt = tasks.begin(); pt != tasks.end(); ++pt){
 	if (pid == pt->getPid()){
 	  alreadyHaveThisTask = true;
 	  break;
 	}
       } // end of loops to check if we already have this task in our vector
       if (!alreadyHaveThisTask){
-	tasks.push_back( TaskInfo(pid) );
+	tasks.push_back( TaskInfoGL(pid) );
       }
     } // end loop over tasks in proc directory
 
@@ -54,7 +80,7 @@ main(int argc, char** argv){
     
     // clean up my vector
     std::cout << "size of tasks vector before cleanup: " << tasks.size() << std::endl;
-    std::vector<TaskInfo>::iterator it = tasks.begin();
+    std::vector<TaskInfoGL>::iterator it = tasks.begin();
     while (it != tasks.end()){
       it->update();
       if (!it->getIsAlive()){
@@ -74,7 +100,7 @@ main(int argc, char** argv){
 
     
     //for (std::vector<TaskInfo>::reverse_iterator pt = tasks.rbegin(); pt != tasks.rend(); ++pt){ // begin loop over tasks in my vector
-    for (std::vector<TaskInfo>::reverse_iterator pt = tasks.rbegin(); pt < tasks.rbegin() + 10; ++pt){ // begin loop over tasks in my vector
+    for (std::vector<TaskInfoGL>::reverse_iterator pt = tasks.rbegin(); pt < tasks.rbegin() + 10; ++pt){ // begin loop over tasks in my vector
       std::cout << pt->getName() << ": cpu " << pt->getCpu() << ", mem " << pt->getMem() << std::endl; 
     } // end loop over tasks in my vector
 

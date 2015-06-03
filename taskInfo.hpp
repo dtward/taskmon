@@ -14,11 +14,14 @@ public:
   // my enum type for properties, this will be used for sorting
   enum property {CPU, MEM};
 
-private:
+
   // the members
+protected:
+  // time will be used by the children class
   time_t _lastTime;
   time_t _thisTime;
   // the process
+private:
   int _pid;
   bool _isAlive;
   // the things I'm interested in

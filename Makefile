@@ -2,16 +2,18 @@ all: taskmon
 
 
 
-taskmon: taskmon.o taskInfo.o
-	g++ -o taskmon taskmon.o taskInfo.o
+taskmon: taskmon.o taskInfo.o taskInfoGL.o
+	g++ -o taskmon taskmon.o taskInfo.o taskInfoGL.o
 
 
-taskmon.o: taskmon.cpp taskInfo.hpp
+taskmon.o: taskmon.cpp taskInfo.hpp taskInfoGL.hpp
 	g++ -c -o taskmon.o taskmon.cpp
 
 taskInfo.o: taskInfo.cpp taskInfo.hpp
 	g++ -c -o taskInfo.o taskInfo.cpp
 
+taskInfoGL.o: taskInfoGL.cpp taskInfo.hpp 
+	g++ -c -o taskInfoGL.o taskInfoGL.cpp
 
 clean:
 	rm -f taskmon
