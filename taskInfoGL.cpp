@@ -38,12 +38,15 @@ void TaskInfoGL::setDefaults(){
 
 
 // update
-void TaskInfoGL::update(){
+void TaskInfoGL::update(double Fx, double Fy){
   TaskInfo::update();
 
   double deltat = _thisTime - _lastTime;
   _x += _xdot * deltat;
   _y += _ydot * deltat;
+
+  _xdot += Fx/_m * deltat;
+  _ydot += Fy/_m * deltat;
 
 
 }

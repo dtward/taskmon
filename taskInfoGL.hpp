@@ -10,10 +10,12 @@ public TaskInfo
   // members include an x coordinate and a y coordinate
   double _x;
   double _y;
+  double _z;
 
   // and velocity
   double _xdot;
   double _ydot;
+  double _zdot;
 
   // and a size
   double _s;
@@ -26,13 +28,15 @@ public TaskInfo
   // constructor
   TaskInfoGL();
   TaskInfoGL(int pid);
-  TaskInfoGL(int pid, double x, double y);
+  TaskInfoGL(int pid, double x, double y, double z);
 
   // get and set
   void setX(double x);
   double getX();
   void setY( double y);
   double getY();
+  void setZ(double x);
+  double getZ();
 
 
   void setS(double s);
@@ -43,7 +47,7 @@ public TaskInfo
 
 
   // update function
-  void update();
+  void update(double Fx = 0.0, double Fy = 0.0);
 
 };
 
