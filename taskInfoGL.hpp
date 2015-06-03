@@ -47,7 +47,7 @@ public TaskInfo
 
 
   // update function
-  void update(double Fx = 0.0, double Fy = 0.0);
+  void update(double Fx = 0.0, double Fy = 0.0, double Fz = 0.0);
 
 };
 

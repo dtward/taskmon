@@ -3,22 +3,22 @@
 TaskInfoGL::TaskInfoGL()
   : TaskInfo()
 {
-  _x = 0.0;
-  _y = 0.0;
+  setDefaults();
 }
 
 TaskInfoGL::TaskInfoGL(int pid)
   : TaskInfo(pid)
 {
-  _x = 0.0;
-  _y = 0.0;
+  setDefaults();
 }
 
-TaskInfoGL::TaskInfoGL(int pid, double x, double y)
+TaskInfoGL::TaskInfoGL(int pid, double x, double y, double z)
   : TaskInfo(pid)
 {
+  setDefaults();
   _x = x;
   _y = y;
+  _z = z;
 }
 
 
@@ -27,9 +27,11 @@ TaskInfoGL::TaskInfoGL(int pid, double x, double y)
 void TaskInfoGL::setDefaults(){
   _x = 0.0;
   _y = 0.0;
+  _z = 0.0;
 
   _xdot = 0.0;
   _ydot = 0.0;
+  _zdot = 0.0;
 
   _s = 0.1;
   _m = 1.0;
@@ -38,15 +40,29 @@ void TaskInfoGL::setDefaults(){
 
 
 // update
-void TaskInfoGL::update(double Fx, double Fy){
+void TaskInfoGL::update(double Fx, double Fy, double Fz){
   TaskInfo::update();
 
+  // set the size and mass based on the task properties
+  // I really should do lowpass filtering here!
+  // for example
+  double p = 0.1;
+  double cpuScale = 0.1;
+  _s = _s*(1.0 - p) + getCpu()*cpuScale*p;
+
+  double memScale = 00.1;
+  _m = _m*(1.0 - p) + getMem()*memScale*p;
+
+
+  // update the dynamics
   double deltat = _thisTime - _lastTime;
   _x += _xdot * deltat;
   _y += _ydot * deltat;
+  _z += _zdot * deltat;
 
   _xdot += Fx/_m * deltat;
   _ydot += Fy/_m * deltat;
+  _zdot += Fz/_m * deltat;
 
 
 }
