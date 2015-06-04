@@ -161,6 +161,7 @@ void TaskInfo::update(){
   _lastTime = _thisTime;
   time(&_thisTime);
   double deltaT = difftime(_thisTime, _lastTime);
+  if (deltaT == 0) deltaT = 10000.0; // avoid an error, make the numbers really small the first time
   //std::cout << "deltaT is " << deltaT << std::endl;
 
   // first assemble the root string

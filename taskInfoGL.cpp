@@ -39,7 +39,6 @@ void TaskInfoGL::setDefaults(){
   _r = 0.75;
   _g = 0.75;
   _b = 0.75;
-
 }
 
 
@@ -57,6 +56,8 @@ void TaskInfoGL::update(double Fx, double Fy, double Fz){
   double memScale = 00.1;
   _m = _m*(1.0 - p) + getMem()*memScale*p;
 
+  // set the r,g,b
+  // not sure what to set them based on
 
   // update the dynamics
   double deltat = _thisTime - _lastTime;
@@ -67,6 +68,5 @@ void TaskInfoGL::update(double Fx, double Fy, double Fz){
   _xdot += Fx/_m * deltat;
   _ydot += Fy/_m * deltat;
   _zdot += Fz/_m * deltat;
-
 
 }
