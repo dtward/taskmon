@@ -22,6 +22,10 @@ public TaskInfo
   // and a mass
   double _m;
 
+  // colors
+  double _r;
+  double _g;
+  double _b;
 
   void setDefaults();
  public:

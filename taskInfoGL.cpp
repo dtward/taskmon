@@ -36,6 +36,10 @@ void TaskInfoGL::setDefaults(){
   _s = 0.1;
   _m = 1.0;
 
+  _r = 0.75;
+  _g = 0.75;
+  _b = 0.75;
+
 }
 
 
