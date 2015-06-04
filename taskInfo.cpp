@@ -9,6 +9,9 @@
 // default sort by
 // this is the weird notation to set static members
 TaskInfo::property TaskInfo::_sortBy = TaskInfo::CPU;
+// default verbose
+bool TaskInfo::_verbose = false;
+
 
 // constructor
 TaskInfo::TaskInfo(){
@@ -67,7 +70,9 @@ void TaskInfo::update0(){
   if (fName.good()){
   } else {
     _isAlive = false;
-    std::cerr << "could not read name" << std::endl;
+    if (_verbose){
+      std::cerr << "could not read name" << std::endl;
+    }
   }
   fName >> _name;
   fName.close();
@@ -78,7 +83,9 @@ void TaskInfo::update0(){
     fMem >> _mem;
   } else {
     _isAlive = false;
-    std::cerr << "could not read memory" << std::endl;
+    if (_verbose){
+      std::cerr << "could not read memory" << std::endl;
+    }
   }
   fMem.close();
 
@@ -93,7 +100,9 @@ void TaskInfo::update0(){
     fIo >> _ioOut0;
   } else {
     _isAlive = false;
-    std::cerr << "could not read io" << std::endl;
+    if (_verbose){
+      std::cerr << "could not read io" << std::endl;
+    }
   }
   fIo.close();
   _ioIn = 0;
@@ -135,7 +144,9 @@ void TaskInfo::update0(){
     fCpu >> _cpu0;
     //std::cout << "read raw cpu as " << _cpu0 << std::endl;
   } else {
-    std::cerr << "could not read cpu" << std::endl;
+    if (_verbose){
+      std::cerr << "could not read cpu" << std::endl;
+    }
     _isAlive = false;
   }
   fCpu.close();
@@ -162,7 +173,9 @@ void TaskInfo::update(){
     _isAlive = true;
   } else {
     _isAlive = false;
-    std::cerr << "could not read name" << std::endl;
+    if (_verbose){
+      std::cerr << "could not read name" << std::endl;
+    }
   }
   fName >> _name;
   fName.close();
@@ -173,7 +186,9 @@ void TaskInfo::update(){
     fMem >> _mem;
   } else {
     _isAlive = false;
-    std::cerr << "could not read memory" << std::endl;
+    if (_verbose){
+      std::cerr << "could not read memory" << std::endl;
+    }
   }
   fMem.close();
 
@@ -198,7 +213,9 @@ void TaskInfo::update(){
     _ioOut0 = tmp;
   } else {
     _isAlive = false;
-    std::cerr << "could not read io" << std::endl;
+    if (_verbose){
+      std::cerr << "could not read io" << std::endl;
+    }
   }
   fIo.close();
 
@@ -243,7 +260,9 @@ void TaskInfo::update(){
     _cpu0 = tmp;
   } else {
     _isAlive = false;
-    std::cerr << "could not read cpu" << std::endl;
+    if (_verbose){
+      std::cerr << "could not read cpu" << std::endl;
+    }
   }
   fCpu.close();
 

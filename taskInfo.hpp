@@ -20,8 +20,11 @@ protected:
   // time will be used by the children class
   time_t _lastTime;
   time_t _thisTime;
-  // the process
+
+  static bool _verbose;
+
 private:
+  // the process
   int _pid;
   bool _isAlive;
   // the things I'm interested in
@@ -62,6 +65,8 @@ public:
   double getIoOut() const;
   static property getSortBy();
   static void setSortBy(property p);
+  static bool getVerbose();
+  static void setVerbose();
 
   // update info
   void update();
