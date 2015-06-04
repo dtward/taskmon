@@ -70,3 +70,41 @@ void TaskInfoGL::update(double Fx, double Fy, double Fz){
   _zdot += Fz/_m * deltat;
 
 }
+
+
+
+
+// get set
+void TaskInfoGL::setX(double x){
+  _x = x;
+}
+double TaskInfoGL::getX() const{
+  return _x;
+}
+void TaskInfoGL::setY(double y){
+  _y = y;
+}
+double TaskInfoGL::getY() const{
+  return _y;
+}
+void TaskInfoGL::setZ(double z){
+  _z = z;
+}
+double TaskInfoGL::getZ() const{
+  return _z;
+}
+
+
+void TaskInfoGL::setS(double s){
+  _s = s;
+}
+double TaskInfoGL::getS() const{
+  return _s;
+}
+
+void TaskInfoGL::setM(double m){
+  _m = m;
+}
+double TaskInfoGL::getM() const{
+  return _m;
+}

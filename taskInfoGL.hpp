@@ -36,18 +36,18 @@ public TaskInfo
 
   // get and set
   void setX(double x);
-  double getX();
-  void setY( double y);
-  double getY();
-  void setZ(double x);
-  double getZ();
+  double getX() const;
+  void setY(double y);
+  double getY() const;
+  void setZ(double z);
+  double getZ() const;
 
 
   void setS(double s);
-  double getS();
+  double getS() const;
 
   void setM(double m);
-  double getM();
+  double getM() const;
 
 
   // update function
