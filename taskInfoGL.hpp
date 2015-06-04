@@ -49,9 +49,15 @@ public TaskInfo
   void setM(double m);
   double getM() const;
 
+  void setR(double r);
+  double getR() const;
+  void setG(double g);
+  double getG() const;
+  void setB(double b);
+  double getB() const;
 
   // update function
-  void update(double Fx = 0.0, double Fy = 0.0, double Fz = 0.0);
+  void updateState(double Fx = 0.0, double Fy = 0.0, double Fz = 0.0);
 
 };
 

@@ -3,7 +3,7 @@ all: taskmon
 
 
 taskmon: taskmon.o taskInfo.o taskInfoGL.o
-	g++ -o taskmon taskmon.o taskInfo.o taskInfoGL.o
+	g++ -o taskmon taskmon.o taskInfo.o taskInfoGL.o -lGL -lglut
 
 
 taskmon.o: taskmon.cpp taskInfo.hpp taskInfoGL.hpp

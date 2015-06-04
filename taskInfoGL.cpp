@@ -43,9 +43,7 @@ void TaskInfoGL::setDefaults(){
 
 
 // update
-void TaskInfoGL::update(double Fx, double Fy, double Fz){
-  TaskInfo::update();
-
+void TaskInfoGL::updateState( double Fx, double Fy, double Fz){
   // set the size and mass based on the task properties
   // I really should do lowpass filtering here!
   // for example
@@ -107,4 +105,27 @@ void TaskInfoGL::setM(double m){
 }
 double TaskInfoGL::getM() const{
   return _m;
+}
+
+
+
+
+
+void TaskInfoGL::setR(double r){
+  _r = r;
+}
+double TaskInfoGL::getR() const{
+  return _r;
+}
+void TaskInfoGL::setG(double g){
+  _g = g;
+}
+double TaskInfoGL::getG() const{
+  return _g;
+}
+void TaskInfoGL::setB(double b){
+  _b = b;
+}
+double TaskInfoGL::getB() const{
+  return _b;
 }
