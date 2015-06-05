@@ -48,7 +48,7 @@ struct GlutWindow {
     id = 0;
     msec = 1.0/30.0*1000*2.0;
     timerValue = 0;
-    nTasks = 5;
+    nTasks = 25;
   }
 } glutWindow;
 
@@ -219,18 +219,33 @@ void display(){
 
     glTranslatef(x,y,z);
 
-    double s = it->getS()*1e-6; // note that we are on the order of 10^6
-    //s = 1.0;
+    double s = it->getS(); // note that we are on the order of 10^6 the first time
+    // after first time we are on the order of 10 to 50?
+    s *= 0.01;
+    if (s > 0.3) s = 0.3;
+    if (s < 0.05) s = 0.05;
+    //s = 0.1; 
     std::cout << "scale is " << s << std::endl;
 
+    glPushMatrix();
     glScalef(s,s,s);
 
     glBegin(GL_TRIANGLES);
-    glColor3f(it->getR(),it->getG(),it->getB());
+    //glColor3f(it->getR(),it->getG(),it->getB());
+    glColor3f(0.25,0.5,0.25);
     glVertex3f(0,0,0);
-    glVertex3f(0.1,0,0);
-    glVertex3f(0,0.1,0);
+    glVertex3f(1,0,0);
+    glVertex3f(0,1,0);
     glEnd();
+
+
+    glColor3f(1,1,1);
+    glRasterPos3f(0.125,0.25,0); 
+    std::string myName = it->getName();
+    for (std::string::iterator i = myName.begin(); i != myName.end(); ++i){
+      glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18,*i);
+    }
+    glPopMatrix();
     glPopMatrix();
   }
 
@@ -248,7 +263,7 @@ void timer(int value){
   std::cout << "In timer function, count is " << count << std::endl;
 
   // update the task values every few seconds
-  if (!count%100){
+  if (!(count%20)){
     std::cout << "count is " << count << ", updating tasks" << std::endl;
     updateTasks(tasks); 
   }
@@ -275,21 +290,22 @@ void timer(int value){
       dz = z1 - z0;
       d2 = dx*dx + dy*dy + dz*dz;
       d = sqrt(d2);
-      nx = dx/d;
-      ny = dy/d;
-      nz = dz/d;
+      double ep = 0.00001;
+      nx = dx/(d+ep);
+      ny = dy/(d+ep);
+      nz = dz/(d+ep);
 
-      // now we have a direction for the force
-      double restLength = 0.1;
-      double f = (d - restLength)*5.0;
+      // now we have a direction for the spring force
+      double restLength = 0.75;
+      double f = (d - restLength)*1.0/glutWindow.nTasks*10;
       fx += f*nx;
       fy += f*ny;
       fz += f*nz;
     }
     // add a force pulling you back to the center
-    fx -= it0->getX()*0.5;
-    fy -= it0->getY()*0.5;
-    fz -= it0->getZ()*0.5;
+    fx -= it0->getX()*0.1;
+    fy -= it0->getY()*0.1;
+    fz -= it0->getZ()*0.1;
     // need a drag force
     //double v = sqrt( pow(it0->getXdot(), 2) + pow(it0->getYdot(),2) + pow(it0->getZdot(),2) );
     fx -= it0->getXdot()*0.1*10;
@@ -300,6 +316,13 @@ void timer(int value){
     //fx = fy = fz = 0;
     std::cout << "updating state with force (" << fx << ", " << fy << ", " << fz << ")" << std::endl;
     it0->updateState(fx,fy,fz);
+    double out = 0.9;
+    if (it0->getX() > out) {it0->setX(out);it0->setXdot(0);}
+    if (it0->getY() > out) {it0->setY(out);it0->setYdot(0);}
+    if (it0->getZ() > out) {it0->setZ(out);it0->setZdot(0);}
+    if (it0->getX() < -out) {it0->setX(-out);it0->setXdot(0);}
+    if (it0->getY() < -out) {it0->setY(-out);it0->setYdot(0);}
+    if (it0->getZ() < -out) {it0->setZ(-out);it0->setZdot(0);}
   }
   glutTimerFunc(glutWindow.msec,&timer,value);
   glutPostRedisplay();

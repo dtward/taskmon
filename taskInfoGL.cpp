@@ -40,8 +40,8 @@ void TaskInfoGL::setDefaults(){
   _g = 0.75;
   _b = 0.75;
 
-  _thisTimeState = 0.0;
-  _lastTimeState = -1.0;
+  _thisTimeState = 10;
+  _lastTimeState = 0.0;
 }
 
 
@@ -50,14 +50,15 @@ void TaskInfoGL::updateState( double Fx, double Fy, double Fz){
   // set the size and mass based on the task properties
   // I really should do lowpass filtering here!
   // for example
-  double p = 0.1;
-  double cpuScale = 0.1;
+  double p = 0.05;
+  double cpuScale = 1.0;
   _s = _s*(1.0 - p) + getCpu()*cpuScale*p;
   std::cout << "cpu is " << getCpu() << ", scale is " << _s << std::endl;
 
-  double memScale = 0.1;
+  double memScale = 1.0;
   _m = _m*(1.0 - p) + getMem()*memScale*p;
   _m = 1.0;
+  //_m = 0.1;
 
   // set the r,g,b
   // not sure what to set them based on
