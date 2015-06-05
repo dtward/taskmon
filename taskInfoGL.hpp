@@ -27,6 +27,10 @@ public TaskInfo
   double _g;
   double _b;
 
+  // times for updating state;
+  clock_t _thisTimeState;
+  clock_t _lastTimeState;
+
   void setDefaults();
  public:
   // constructor

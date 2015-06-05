@@ -39,6 +39,9 @@ void TaskInfoGL::setDefaults(){
   _r = 0.75;
   _g = 0.75;
   _b = 0.75;
+
+  _thisTimeState = 0.0;
+  _lastTimeState = -1.0;
 }
 
 
@@ -60,7 +63,9 @@ void TaskInfoGL::updateState( double Fx, double Fy, double Fz){
   // not sure what to set them based on
 
   // update the dynamics
-  double deltat = (_thisTime - _lastTime)*1.0/CLOCKS_PER_SEC;
+  _lastTimeState = _thisTimeState;
+  _thisTimeState = clock();
+  double deltat = (_thisTimeState - _lastTimeState)*1.0/CLOCKS_PER_SEC;
   _x += _xdot * deltat;
   _y += _ydot * deltat;
   _z += _zdot * deltat;
