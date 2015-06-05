@@ -60,7 +60,7 @@ void TaskInfo::update0(){
   // set to true until we see otherwise
   _isAlive = true;
   // get the time
-  time(&_thisTime);
+  _thisTime = clock();
   // first assemble the root string
   std::ostringstream s;
   s << "/proc/" << _pid << "/";
@@ -159,8 +159,8 @@ void TaskInfo::update(){
   _isAlive = true;
   // get time
   _lastTime = _thisTime;
-  time(&_thisTime);
-  double deltaT = difftime(_thisTime, _lastTime);
+  _thisTime = clock();
+  double deltaT = (_thisTime -  _lastTime)*1.0/CLOCKS_PER_SEC;
   if (deltaT == 0) deltaT = 10000.0; // avoid an error, make the numbers really small the first time
   //std::cout << "deltaT is " << deltaT << std::endl;
 

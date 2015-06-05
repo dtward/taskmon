@@ -51,14 +51,15 @@ void TaskInfoGL::updateState( double Fx, double Fy, double Fz){
   double cpuScale = 0.1;
   _s = _s*(1.0 - p) + getCpu()*cpuScale*p;
 
-  double memScale = 00.1;
+  double memScale = 0.1;
   _m = _m*(1.0 - p) + getMem()*memScale*p;
+  _m = 1.0;
 
   // set the r,g,b
   // not sure what to set them based on
 
   // update the dynamics
-  double deltat = _thisTime - _lastTime;
+  double deltat = (_thisTime - _lastTime)*1.0/CLOCKS_PER_SEC;
   _x += _xdot * deltat;
   _y += _ydot * deltat;
   _z += _zdot * deltat;
@@ -66,6 +67,8 @@ void TaskInfoGL::updateState( double Fx, double Fy, double Fz){
   _xdot += Fx/_m * deltat;
   _ydot += Fy/_m * deltat;
   _zdot += Fz/_m * deltat;
+
+  std::cout << "_xdot increased by " << Fx/_m * deltat << std::endl;
 
 }
 
@@ -90,6 +93,25 @@ void TaskInfoGL::setZ(double z){
 }
 double TaskInfoGL::getZ() const{
   return _z;
+}
+
+void TaskInfoGL::setXdot(double xdot){
+  _xdot = xdot;
+}
+double TaskInfoGL::getXdot() const{
+  return _xdot;
+}
+void TaskInfoGL::setYdot(double ydot){
+  _ydot = ydot;
+}
+double TaskInfoGL::getYdot() const{
+  return _ydot;
+}
+void TaskInfoGL::setZdot(double zdot){
+  _zdot = zdot;
+}
+double TaskInfoGL::getZdot() const{
+  return _zdot;
 }
 
 

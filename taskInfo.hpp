@@ -18,8 +18,8 @@ public:
   // the members
 protected:
   // time will be used by the children class
-  time_t _lastTime;
-  time_t _thisTime;
+  clock_t _lastTime;
+  clock_t _thisTime;
 
   static bool _verbose;
 

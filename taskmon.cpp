@@ -85,8 +85,8 @@ void updateTasks(std::vector<TaskInfoGL> & tasks){
       double x,y,z;
       // let's hope we don't put them right in the same place
       count++;
-      x = count/1000.0*(count > 5);
-      y = count/1000.0;
+      x = count/1000.0 * cos(count*2.0*3.14159/10.0);
+      y = count/1000.0 * sin(count*2.0*3.14159/10.0);
       z = 0;
       tasks.push_back( TaskInfoGL(pid,x,y,z) );
     }
@@ -272,6 +272,13 @@ void timer(int value){
       fy += f*ny;
       fz += f*nz;
     }
+    // add a force pulling you back to the center
+    fx -= it0->getX()*10;
+    fy -= it0->getY()*10;
+    fz -= it0->getZ()*10;
+    // need a drag force
+    double v = pow(it0->getXdot(), 2);
+
     // update state
     std::cout << "updating state with force (" << fx << ", " << fy << ", " << fz << ")" << std::endl;
     it0->updateState(fx,fy,fz);

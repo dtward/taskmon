@@ -42,6 +42,15 @@ public TaskInfo
   void setZ(double z);
   double getZ() const;
 
+  void setXdot(double x);
+  double getXdot() const;
+  void setYdot(double y);
+  double getYdot() const;
+  void setZdot(double z);
+  double getZdot() const;
+
+
+
 
   void setS(double s);
   double getS() const;
