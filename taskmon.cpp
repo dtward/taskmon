@@ -1,8 +1,4 @@
 #include <iostream>
-
-
-#include "GL/glut.h"
-
 #include "unistd.h" // for sleep
 #include <vector>
 #include <string>
@@ -11,6 +7,17 @@
 #include <algorithm> // for sort, find
 #include <cmath> // for finding force
 
+// to get things working at work, seems I need to include pthread
+// as in here: http://stackoverflow.com/questions/20007961/error-running-a-compiled-c-file-uses-opengl-error-inconsistency-detected
+#include "pthread.h"
+void junk(){
+  int i;
+  i = pthread_getconcurrency();
+}
+
+
+// includes for this project
+#include "GL/glut.h"
 #include "taskInfo.hpp"
 #include "taskInfoGL.hpp"
 
