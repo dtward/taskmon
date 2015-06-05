@@ -1,3 +1,5 @@
+
+// standard library includes
 #include <iostream>
 #include "unistd.h" // for sleep
 #include <vector>
@@ -5,7 +7,7 @@
 #include "dirent.h" // basic directory reader
 #include <sstream>
 #include <algorithm> // for sort, find
-#include <cmath> // for finding force
+#include <cmath> // for finding force, need sqrt
 
 // to get things working at work, seems I need to include pthread
 // as in here: http://stackoverflow.com/questions/20007961/error-running-a-compiled-c-file-uses-opengl-error-inconsistency-detected
@@ -34,6 +36,7 @@ struct GlutWindow {
   int id;
   int msec;
   int timerValue;
+  int nTasks;
   // default constructor will set to the parameters I want
   GlutWindow(){
     width = 500;
@@ -45,8 +48,10 @@ struct GlutWindow {
     id = 0;
     msec = 1.0/30.0*1000*10;
     timerValue = 0;
+    nTasks = 5;
   }
 } glutWindow;
+
 
 void display();
 void timer(int value);
@@ -197,8 +202,12 @@ void display(){
 
   // draw
   std::cout << "about to draw tasks" << std::endl;
-  for (std::vector<TaskInfoGL>::iterator it = tasks.begin(); it != tasks.end(); ++it){
-    std::cout << "drawing " << it->getName()  << " at (";
+
+  int count = 0;
+  for (std::vector<TaskInfoGL>::reverse_iterator it = tasks.rbegin(); it != tasks.rend(); ++it){
+    count++;
+    if (it - glutWindow.nTasks == tasks.rbegin()) break;
+    std::cout << "drawing task " << count << ", " << it->getName()  << " at (";
 
     glBegin(GL_TRIANGLES);
     double x,y,z;
@@ -231,7 +240,8 @@ void timer(int value){
     updateTasks(tasks); 
 
   // loop over tasks
-  for (std::vector<TaskInfoGL>::iterator it0 = tasks.begin(); it0 != tasks.end(); ++it0){
+  for (std::vector<TaskInfoGL>::reverse_iterator it0 = tasks.rbegin(); it0 != tasks.rend(); ++it0){
+    if (it0 - glutWindow.nTasks == tasks.rbegin()) break;
     // calculate force
     double fx,fy,fz;
     fx = fy = fz = 0.0;
@@ -240,8 +250,9 @@ void timer(int value){
     x0 = it0->getX();
     y0 = it0->getY();
     z0 = it0->getZ();
-    for (std::vector<TaskInfoGL>::iterator it1 = tasks.begin(); it1 != tasks.end(); ++it1){
+    for (std::vector<TaskInfoGL>::reverse_iterator it1 = tasks.rbegin(); it1 != tasks.rend(); ++it1){
       if (it1 == it0) continue;
+      if (it1 - glutWindow.nTasks == tasks.rbegin()) break;
       x1 = it1->getX();
       y1 = it1->getY();
       z1 = it1->getZ();
