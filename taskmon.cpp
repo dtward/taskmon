@@ -46,7 +46,7 @@ struct GlutWindow {
     mode = GLUT_DOUBLE | GLUT_RGB;
     name = "test";
     id = 0;
-    msec = 1.0/30.0*1000*10;
+    msec = 1.0/30.0*1000*2.0;
     timerValue = 0;
     nTasks = 5;
   }
@@ -85,8 +85,8 @@ void updateTasks(std::vector<TaskInfoGL> & tasks){
       double x,y,z;
       // let's hope we don't put them right in the same place
       count++;
-      x = count/1000.0 * cos(count*2.0*3.14159/10.0);
-      y = count/1000.0 * sin(count*2.0*3.14159/10.0);
+      x = cos(count*2.0*3.14159/10.0)*0.5;
+      y = sin(count*2.0*3.14159/10.0)*0.5;
       z = 0;
       tasks.push_back( TaskInfoGL(pid,x,y,z) );
     }
@@ -208,18 +208,30 @@ void display(){
     count++;
     if (it - glutWindow.nTasks == tasks.rbegin()) break;
     std::cout << "drawing task " << count << ", " << it->getName()  << " at (";
-
-    glBegin(GL_TRIANGLES);
     double x,y,z;
     x = it->getX();
     y = it->getY();
     z = it->getZ();
     std::cout << x << ", " << y << ", " << z << ")" << std::endl;
+
+
+    glPushMatrix();
+
+    glTranslatef(x,y,z);
+
+    double s = it->getS()*1e-6; // note that we are on the order of 10^6
+    //s = 1.0;
+    std::cout << "scale is " << s << std::endl;
+
+    glScalef(s,s,s);
+
+    glBegin(GL_TRIANGLES);
     glColor3f(it->getR(),it->getG(),it->getB());
-    glVertex3f(x,y,z);
-    glVertex3f(x+0.1,y,z);
-    glVertex3f(x,y+0.1,z);
+    glVertex3f(0,0,0);
+    glVertex3f(0.1,0,0);
+    glVertex3f(0,0.1,0);
     glEnd();
+    glPopMatrix();
   }
 
 
@@ -236,8 +248,10 @@ void timer(int value){
   std::cout << "In timer function, count is " << count << std::endl;
 
   // update the task values every few seconds
-  if (!count%100)
+  if (!count%100){
+    std::cout << "count is " << count << ", updating tasks" << std::endl;
     updateTasks(tasks); 
+  }
 
   // loop over tasks
   for (std::vector<TaskInfoGL>::reverse_iterator it0 = tasks.rbegin(); it0 != tasks.rend(); ++it0){
@@ -266,20 +280,24 @@ void timer(int value){
       nz = dz/d;
 
       // now we have a direction for the force
-      double restLength = 0.2;
-      double f = (d - restLength)*0.1;
+      double restLength = 0.1;
+      double f = (d - restLength)*5.0;
       fx += f*nx;
       fy += f*ny;
       fz += f*nz;
     }
     // add a force pulling you back to the center
-    fx -= it0->getX()*10;
-    fy -= it0->getY()*10;
-    fz -= it0->getZ()*10;
+    fx -= it0->getX()*0.5;
+    fy -= it0->getY()*0.5;
+    fz -= it0->getZ()*0.5;
     // need a drag force
-    double v = pow(it0->getXdot(), 2);
+    //double v = sqrt( pow(it0->getXdot(), 2) + pow(it0->getYdot(),2) + pow(it0->getZdot(),2) );
+    fx -= it0->getXdot()*0.1*10;
+    fy -= it0->getYdot()*0.1*10;
+    fz -= it0->getZdot()*0.1*10;
 
     // update state
+    //fx = fy = fz = 0;
     std::cout << "updating state with force (" << fx << ", " << fy << ", " << fz << ")" << std::endl;
     it0->updateState(fx,fy,fz);
   }

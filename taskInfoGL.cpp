@@ -50,6 +50,7 @@ void TaskInfoGL::updateState( double Fx, double Fy, double Fz){
   double p = 0.1;
   double cpuScale = 0.1;
   _s = _s*(1.0 - p) + getCpu()*cpuScale*p;
+  std::cout << "cpu is " << getCpu() << ", scale is " << _s << std::endl;
 
   double memScale = 0.1;
   _m = _m*(1.0 - p) + getMem()*memScale*p;
