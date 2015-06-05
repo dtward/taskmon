@@ -19,7 +19,7 @@ install:
 	cp taskmon ${HOME}/.local/bin
 
 uninstall:
-	rm -f ${HOME}/.local/bin
+	rm -f ${HOME}/.local/bin/taskmon
 
 clean:
 	rm -f taskmon
