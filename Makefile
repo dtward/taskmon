@@ -15,6 +15,13 @@ taskInfo.o: taskInfo.cpp taskInfo.hpp
 taskInfoGL.o: taskInfoGL.cpp taskInfo.hpp 
 	g++ -c -o taskInfoGL.o taskInfoGL.cpp
 
+install:
+	cp taskmon ${HOME}/.local/bin
+
+uninstall:
+	rm -f ${HOME}/.local/bin
+
 clean:
 	rm -f taskmon
 	rm -f *.o
+
