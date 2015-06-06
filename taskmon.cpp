@@ -49,6 +49,8 @@ struct GlutWindow {
     msec = 1.0/30.0*1000*2.0;
     timerValue = 0;
     nTasks = 25;
+    nTasks = 200;
+    //nTasks = 100;
   }
 } glutWindow;
 
@@ -231,8 +233,8 @@ void display(){
     glScalef(s,s,s);
 
     glBegin(GL_TRIANGLES);
-    //glColor3f(it->getR(),it->getG(),it->getB());
-    glColor3f(0.25,0.5,0.25);
+    glColor3f(it->getR(),it->getG(),it->getB());
+    //glColor3f(0.25,0.5,0.25);
     glVertex3f(0,0,0);
     glVertex3f(1,0,0);
     glVertex3f(0,1,0);
@@ -296,7 +298,11 @@ void timer(int value){
       nz = dz/(d+ep);
 
       // now we have a direction for the spring force
+      // I really want the spring length to depend on  the scale
       double restLength = 0.75;
+      restLength = (it0->getS() + it1->getS()) * 0.00001;
+      restLength = (restLength > 0.3) ? 0.3 :
+	( (restLength < 0.05) ? 0.05 : restLength);
       double f = (d - restLength)*1.0/glutWindow.nTasks*10;
       fx += f*nx;
       fy += f*ny;

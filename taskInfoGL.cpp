@@ -36,9 +36,9 @@ void TaskInfoGL::setDefaults(){
   _s = 0.1;
   _m = 1.0;
 
-  _r = 0.75;
-  _g = 0.75;
-  _b = 0.75;
+  _r = 0.75*0; // let's start at zero and increase over time
+  _g = 0.75*0;
+  _b = 0.75*0;
 
   _thisTimeState = 10;
   _lastTimeState = 0.0;
@@ -55,10 +55,12 @@ void TaskInfoGL::updateState( double Fx, double Fy, double Fz){
   _s = _s*(1.0 - p) + getCpu()*cpuScale*p;
   std::cout << "cpu is " << getCpu() << ", scale is " << _s << std::endl;
 
-  double memScale = 1.0;
+  double memScale = 1e-4;
   _m = _m*(1.0 - p) + getMem()*memScale*p;
-  _m = 1.0;
+  //_m = 1.0;
   //_m = 0.1;
+
+
 
   // set the r,g,b
   // not sure what to set them based on
@@ -76,6 +78,16 @@ void TaskInfoGL::updateState( double Fx, double Fy, double Fz){
   _zdot += Fz/_m * deltat;
 
   std::cout << "_xdot increased by " << Fx/_m * deltat << std::endl;
+
+
+  _r += (1.0 - _r)*deltat*0;
+  _g += (1.0 - _g)*deltat; // when _g = 1, the derivative is zero
+  _b += (1.0 - _b)*deltat;
+
+  _g = (_g>1) ? 1 : ( (_g < 0) ? 0 : _g );
+  _r = (_r>1) ? 1 : ( (_r < 0) ? 0 : _r );
+  _b = (_b>1) ? 1 : ( (_b < 0) ? 0 : _b );
+
 
 }
 
