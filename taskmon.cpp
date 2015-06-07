@@ -87,8 +87,8 @@ void updateTasks(std::vector<TaskInfoGL> & tasks){
       double x,y,z;
       // let's hope we don't put them right in the same place
       count++;
-      x = cos(count*2.0*3.14159/10.0)*0.5;
-      y = sin(count*2.0*3.14159/10.0)*0.5;
+      x = cos(count*2.0*3.14159/glutWindow.nTasks)*0.5;
+      y = sin(count*2.0*3.14159/glutWindow.nTasks)*0.5;
       z = 0;
       tasks.push_back( TaskInfoGL(pid,x,y,z) );
     }
@@ -244,9 +244,20 @@ void display(){
     glColor3f(1,1,1);
     glRasterPos3f(0.125,0.25,0); 
     std::string myName = it->getName();
+    void * font = GLUT_BITMAP_HELVETICA_18;
     for (std::string::iterator i = myName.begin(); i != myName.end(); ++i){
-      glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18,*i);
+      glutBitmapCharacter(font,*i);
     }
+    //glutBitmapCharacter(font,'\n'); // this doesn't seem to do anything
+    glRasterPos3f(0.125,0.0,0); 
+
+    std::ostringstream sCPU;
+    sCPU << "CPU: " << it->getCpu();
+    std::string myCPU = sCPU.str();
+    for (std::string::iterator i = myCPU.begin(); i != myCPU.end(); ++i){
+      glutBitmapCharacter(font,*i);
+    }
+
     glPopMatrix();
     glPopMatrix();
   }
